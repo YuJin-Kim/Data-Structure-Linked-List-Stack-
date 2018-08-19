@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define ADD 1
+#define DEL 2
+#define SHOW 3
+#define END 4
+#define TRUE 1
+#define FALSE 0
+#define SIZE 5
+
+typedef struct node * ptr;
+ptr top = NULL;
+typedef struct node {
+	int data;
+	ptr link;
+}Node;
+
+int menu() {
+	int n;
+
+	printf("<Menu>\n");
+	printf("1) Add a element\n");
+	printf("2) Delete a element\n");
+	printf("3) Show the list\n");
+	printf("4) End\n\n");
+	printf("메뉴를 선택하세요: ");
+	scanf("%d", &n);
+	printf("\n");
+
+	return n;
+}
+
+void add_element() {
+	ptr new_node = (ptr)malloc(sizeof(Node));
+	int num;
+
+	printf("넣을 원소를 입력해주세요: ");
+	scanf("%d", &num);
+	new_node->data = num;
+	if (stack_empty() == TRUE)
+		new_node->link = NULL;
+	else if (stack_empty() == FALSE)
+		new_node->link = top;
+	top = new_node;
+	printf("원소 %d를 넣었습니다.\n\n", num);
+}
+
+void delete_element() {
+	ptr temp = (ptr)malloc(sizeof(Node));
+	int num;
+
+	if (stack_empty() == TRUE)
+		printf("stack이 비워져있습니다!\n\n");
+	else if (stack_empty() == FALSE) {
+		num = top->data;
+		temp = top;
+		if (temp->link == NULL)
+			top = NULL;
+		else
+			top = top->link;
+		free(temp);
+		printf("지워진 원소는 %d입니다.\n\n", num);
+	}
+}
+
+int stack_empty() {
+	if (top == NULL)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+void show_list() {
+
+	ptr temp = (ptr)malloc(sizeof(Node));
+	int i;
+
+	if (stack_empty() == TRUE)
+		printf("stack이 비워져있습니다!\n");
+	else if (stack_empty() == FALSE) {
+		for (temp = top, i = 1; temp->link != NULL; temp = temp->link, i++)
+			printf("%d번째 원소는 %d입니다.\n", i, temp->data);
+		printf("%d번째 원소는 %d입니다.\n", i, temp->data);
+	}
+	printf("\n");
+}
+
+void end() {
+	ptr temp = (ptr)malloc(sizeof(Node));
+
+	for (temp = top; temp!= NULL; top = temp) {
+		temp = temp->link;
+		free(top);
+	}
+	free(temp);
+	free(top);
+	printf("프로그램을 종료합니다!\n");
+}
+
+int main() {
+	int m;
+
+	do {
+		m = menu();
+
+		if (m == ADD)
+			add_element();
+		else if (m == DEL)
+			delete_element();
+		else if (m == SHOW)
+			show_list();
+		else if (m == END)
+			end();
+	} while (m != END);
+
+	return 0;
+}
